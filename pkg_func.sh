@@ -18,7 +18,7 @@
 #
 # Utility functions to build packages
 #
-# Version 1.1
+# Version 1.2
 #
 #=============================================================================
 
@@ -189,15 +189,14 @@ build_tgz
 
 #-----------------------------------
 
+[ -z "$sdir" ] && sdir="$PWD/.."
+[ -z "$udir" ] && udir="$PWD"
 result_dir=/tmp/pkg
 [ -z "$tmpfile" ] && tmpfile=/tmp/.mk_pack$$
 tspec=/tmp/specfile
 
-file=''
+files=''
 [ -f $udir/files ] && files="`awk '{ print $1 }' <$udir/files`"
-
-[ -z "$sdir" ] && sdir="$PWD/.."
-[ -z "$udir" ] && udir="$PWD"
 
 export result_dir tmpfile tspec files sdir udir
 
