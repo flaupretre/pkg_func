@@ -1,0 +1,8 @@
+Group: System Environment/Configuration
+License: <License>
+URL: <URL>	
+Packager: <Packager>
+Source: none
+AutoReqProv: no
+# Next line only if 'noarch' package
+BuildArch: noarch

@@ -1,0 +1,28 @@
+#
+#	Build packages (rpm and tgz)
+#
+#============================================================================
+
+udir=$PWD
+
+. $udir/config.sh
+. $udir/pkg_func.sh
+
+sdir=$udir/..
+tdir=/opt/$PRODUCT
+
+files="$tdir"
+
+export udir sdir tdir files
+
+#-- Specific - Copy source files
+
+copy_tree $sdir $tdir
+
+#--
+
+build_packages
+
+cleanup
+
+#=========================================================================
