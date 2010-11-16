@@ -70,17 +70,20 @@ filter <$tmpfile.ffilter >$1
 mk_spec()
 {
 (
-cat $udir/specfile
-
 cat <<EOF
 Name: %PRODUCT%
 Summary: %DESCRIPTION%
 Version: %VERSION%
 Release: %RELEASE%
 provides: %PRODUCT%
-%description
-%DESCRIPTION%
 EOF
+
+cat $udir/specfile
+
+if ! grep '^%description' $udir/specfile >/dev/null ; then
+	echo '%description'
+	echo '%DESCRIPTION%'
+fi
 
 if [ -f $udir/preinstall.sh ] ; then
 	echo '%pre'
@@ -140,6 +143,7 @@ mk_link()
 # $2=source
 
 \rm -rf $2
+mkdir -p `dirname $2`
 ln -s $1 $2
 }
 
