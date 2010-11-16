@@ -3,17 +3,14 @@
 #
 #============================================================================
 
-udir=$PWD
+. ./config.sh
+. ./pkg_func.sh
 
-. $udir/config.sh
-. $udir/pkg_func.sh
-
-sdir=$udir/..
 tdir=/opt/$PRODUCT
 
 files="$tdir"
 
-export udir sdir tdir files
+export tdir files
 
 #-- Specific - Copy source files
 

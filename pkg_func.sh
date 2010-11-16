@@ -196,7 +196,10 @@ tspec=/tmp/specfile
 file=''
 [ -f $udir/files ] && files="`awk '{ print $1 }' <$udir/files`"
 
-export result_dir tmpfile tspec files
+[ -z "$sdir" ] && sdir="$PWD/.."
+[ -z "$udir" ] && udir="$PWD"
+
+export result_dir tmpfile tspec files sdir udir
 
 cleanup
 
