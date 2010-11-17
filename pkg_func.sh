@@ -66,6 +66,8 @@ filter <$tmpfile.ffilter >$1
 }
 
 #------
+# The empty 'echo' commands are here to fix problems occuring with files whose
+# last character is not a newline.
 
 mk_spec()
 {
@@ -79,6 +81,7 @@ provides: %PRODUCT%
 EOF
 
 cat $udir/specfile
+echo
 
 if ! grep '^%description' $udir/specfile >/dev/null ; then
 	echo '%description'
@@ -88,21 +91,25 @@ fi
 if [ -f $udir/preinstall.sh ] ; then
 	echo '%pre'
 	cat $udir/config.sh $udir/preinstall.sh
+	echo
 fi
 
 if [ -f $udir/postinstall.sh ] ; then
 	echo '%post'
 	cat $udir/config.sh $udir/postinstall.sh
+	echo
 fi
 
 if [ -f $udir/preuninstall.sh ] ; then
 	echo '%preun'
 	cat $udir/config.sh $udir/preuninstall.sh
+	echo
 fi
 
 if [ -f $udir/postuninstall.sh ] ; then
 	echo '%postun'
 	cat $udir/config.sh $udir/postuninstall.sh
+	echo
 fi
 
 echo '%files'
@@ -111,6 +118,7 @@ if [ -f $udir/files ] ; then
 else
 	for f in $files; do	echo "$f" ; done
 fi
+echo
 ) | filter >$tspec
 }
 
