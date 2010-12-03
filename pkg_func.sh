@@ -127,7 +127,7 @@ echo
 clean_dir()
 {
 \rm -rf $1
-mkdir $1
+mkdir -p $1
 }
 
 #------
