@@ -22,13 +22,6 @@
 #
 #=============================================================================
 
-cleanup()
-{
-\rm -rf $tmpfile*
-}
-
-#------
-
 step()
 {
 echo
@@ -61,8 +54,8 @@ ffilter()
 {
 # $1 = file
 
-cp $1 $tmpfile.ffilter
-filter <$tmpfile.ffilter >$1
+cp $1 $pf_tmpfile.ffilter
+filter <$pf_tmpfile.ffilter >$1
 }
 
 #------
@@ -162,12 +155,12 @@ build_rpm()
 if [ -x /bin/rpm ] ; then
 	step "Building RPM package"
 	mk_spec
-	mkdir -p $result_dir/rpm
+	mkdir -p $pkg_dir/rpm
 	if [ -n "$setarch" ] ; then
 		setarch $setarch rpmbuild --target $setarch \
-			--define="_rpmdir $result_dir/rpm" -bb $tspec
+			--define="_rpmdir $pkg_dir/rpm" -bb $tspec
 	else
-		rpmbuild --define="_rpmdir $result_dir/rpm" -bb $tspec
+		rpmbuild --define="_rpmdir $pkg_dir/rpm" -bb $tspec
 	fi
 fi
 }
@@ -185,8 +178,8 @@ for f in $files
 done
 
 cd /
-mkdir -p $result_dir/tgz
-tgz_file=`echo "$result_dir/tgz/$PRODUCT-$VERSION-$RELEASE.tgz" | env_filter`
+mkdir -p $pkg_dir/tgz
+tgz_file=`echo "$pkg_dir/tgz/$PRODUCT-$VERSION-$RELEASE.tgz" | env_filter`
 tar cf - $rfiles | gzip --best >$tgz_file
 echo "Wrote: $tgz_file"
 }
@@ -199,18 +192,29 @@ build_rpm
 build_tgz
 }
 
+#-------
+
+cleanup()
+{
+/bin/rm -rf $pf_tmpfile*
+}
+
 #-----------------------------------
+# MAIN
+
+. ./config.sh
 
 [ -z "$sdir" ] && sdir="$PWD/.."
 [ -z "$udir" ] && udir="$PWD"
-result_dir=/tmp/pkg
-[ -z "$tmpfile" ] && tmpfile=/tmp/.mk_pack$$
+[ -z "$pkg_dir" ] && pkg_dir=/tmp/pkg
+[ -z "$pf_tmpfile" ] && pf_tmpfile=/tmp/.pkg_func.$$
 tspec=/tmp/specfile
 
+links=''
 files=''
 [ -f $udir/files ] && files="`awk '{ print $1 }' <$udir/files`"
 
-export result_dir tmpfile tspec files sdir udir
+export pkg_dir pf_tmpfile tspec files sdir udir
 
 cleanup
 

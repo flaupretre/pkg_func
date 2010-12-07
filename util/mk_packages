@@ -1,0 +1,53 @@
+#
+# Copyright 2010 - Francois Laupretre <francois@tekwire.net>
+#
+#=============================================================================
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License (LGPL) as
+# published by the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#=============================================================================
+#
+#	Build packages (rpm and tgz)
+#
+#=============================================================================
+
+. ../pkg_func.sh
+
+#----
+
+tdir=/opt/$PRODUCT
+
+link_source="/usr/bin/$PRODUCT.sh"
+link_target="$tdir/$PRODUCT.sh"
+doc_dir=/usr/share/doc/$PRODUCT
+
+files="$tdir $link_source $doc_dir"
+
+export tdir link_source link_target files doc_dir files
+
+#-- Specific - Copy source files
+
+cd $sdir
+
+clean_dir $tdir
+cp -p $PRODUCT.sh $tdir/$PRODUCT.sh
+
+clean_dir $doc_dir
+cp -rp COPYING doc/* $doc_dir
+
+mk_link $link_target $link_source	#-- Create symbolic link
+
+#--
+
+build_packages
+
+cleanup

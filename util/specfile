@@ -1,0 +1,9 @@
+Group: System Environment/Configuration
+License: GNU LESSER GENERAL PUBLIC LICENSE, Version 3
+URL: http://%PRODUCT%.tekwire.net
+Packager: Francois Laupretre
+Source: none
+BuildArch: noarch
+AutoReqProv: no
+Requires: sysfunc
+provides: %PRODUCT%
