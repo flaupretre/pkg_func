@@ -133,7 +133,7 @@ copy_tree()
 clean_dir $2
 
 cd $1
-tar cf - . | ( cd $2 ; tar xpf - )
+tar cf - --exclude '.hg*' . | ( cd $2 ; tar xpf - )
 }
 
 #-------
@@ -180,7 +180,7 @@ done
 cd /
 mkdir -p $pkg_dir/tgz
 tgz_file=`echo "$pkg_dir/tgz/$PRODUCT-$VERSION-$RELEASE.tgz" | env_filter`
-tar cf - $rfiles | gzip --best >$tgz_file
+tar cf - --exclude '.hg*' $rfiles | gzip --best >$tgz_file
 echo "Wrote: $tgz_file"
 }
 
