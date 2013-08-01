@@ -18,8 +18,8 @@
 #
 # Utility functions to build packages
 #
-# Version 1.2
-#
+# On entry, the $base var should be set to the buildrootdir for the project.
+# If '/', leave var empty.
 #=============================================================================
 
 step()
@@ -133,7 +133,7 @@ copy_tree()
 clean_dir $2
 
 cd $1
-tar cf - --exclude '.hg*' . | ( cd $2 ; tar xpf - )
+tar cf - --exclude '.hg*' --exclude '.git*' . | ( cd $2 ; tar xpf - )
 }
 
 #-------
@@ -177,10 +177,10 @@ for f in $files
 	rfiles="$rfiles .$f"
 done
 
-cd /
+cd $basedir
 mkdir -p $pkg_dir/tgz
 tgz_file=`echo "$pkg_dir/tgz/$PRODUCT-$VERSION-$RELEASE.tgz" | env_filter`
-tar cf - --exclude '.hg*' $rfiles | gzip --best >$tgz_file
+tar cf - --exclude '.hg*' --exclude '.git*' $rfiles | gzip --best >$tgz_file
 echo "Wrote: $tgz_file"
 }
 
@@ -188,8 +188,8 @@ echo "Wrote: $tgz_file"
 
 build_packages()
 {
-build_rpm
 build_tgz
+build_rpm
 }
 
 #-------
@@ -208,13 +208,15 @@ cleanup()
 [ -z "$udir" ] && udir="$PWD"
 [ -z "$pkg_dir" ] && pkg_dir=/tmp/pkg
 [ -z "$pf_tmpfile" ] && pf_tmpfile=/tmp/.pkg_func.$$
+basedir="$base"
+[ -z "$basedir" ] && basedir='/'
 tspec=/tmp/specfile
 
 links=''
 files=''
 [ -f $udir/files ] && files="`awk '{ print $1 }' <$udir/files`"
 
-export pkg_dir pf_tmpfile tspec files sdir udir
+export pkg_dir pf_tmpfile tspec files sdir udir basedir
 
 cleanup
 
